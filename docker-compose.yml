@@ -1,26 +1,62 @@
-version: '2'
+version: '3'
 
 services:
   db:
     image: postgres
     restart: always
-    ports:
-      - 5432:5432
     volumes:
-      - docker-volumes/db:/var/lib/postgresql/data
+      - ./docker-volumes/db:/var/lib/postgresql/data
     env_file:
       - db.env
 
   app:
     image: nextcloud:15.0-apache
     restart: always
-    ports:
-      - 8088:80
     volumes:
-      - docker-volumes/html:/var/www/html
+      - ./docker-volumes/html:/var/www/html
     environment:
-      - POSTGRES_HOST=db
+      POSTGRES_HOST: db
+      VIRTUAL_HOST: nextcloud.some-domain.com
+      NEXTCLOUD_TRUSTED_DOMAINS: nextcloud.some-domain.com
+      LETSENCRYPT_HOST: nextcloud.some-domain.com
+      LETSENCRYPT_EMAIL: user@provider.com
     env_file:
       - app.env
     depends_on:
       - db
+    networks:
+      - proxy-tier
+      - default
+
+  proxy:
+    image: jwilder/nginx-proxy:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+    volumes:
+      - ./docker-volumes/proxy/certs:/etc/nginx/certs:ro
+      - ./docker-volumes/proxy/vhost.d:/etc/nginx/vhost.d
+      - ./docker-volumes/proxy/html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy-tier
+
+  letsencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    volumes:
+      - ./docker-volumes/proxy/certs:/etc/nginx/certs
+      - ./docker-volumes/proxy/vhost.d:/etc/nginx/vhost.d
+      - ./docker-volumes/proxy/html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - proxy
+    networks:
+      - proxy-tier
+
+networks:
+  proxy-tier:
+  default:
