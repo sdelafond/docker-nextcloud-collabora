@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - docker-volumes/db:/var/lib/postgresql/data
+    env_file:
+      - db.env
+
+  app:
+    image: nextcloud:15.0-apache
+    restart: always
+    ports:
+      - 8088:80
+    volumes:
+      - docker-volumes/html:/var/www/html
+    environment:
+      - POSTGRES_HOST=db
+    env_file:
+      - app.env
+    depends_on:
+      - db
