@@ -29,7 +29,7 @@ services:
       - default
 
   proxy:
-    image: jwilder/nginx-proxy:alpine
+    build: ./proxy
     restart: always
     ports:
       - "80:80"
