@@ -26,7 +26,24 @@ services:
       - db
     networks:
       - proxy-tier
-      - default
+      - default # to connect to db
+
+  code:
+    image: collabora/code:4.0.3.1
+    expose:
+      - 9980
+    cap_add:
+      - MKNOD
+    environment:
+      domain: nextcloud.some-domain.com
+      VIRTUAL_HOST: collabora.some-domain.com
+      VIRTUAL_NETWORK: proxy-tier
+      VIRTUAL_PORT: 9980
+      VIRTUAL_PROTO: https
+      LETSENCRYPT_HOST: collabora.some-domain.com
+      LETSENCRYPT_EMAIL: user@provider.com
+    networks:
+      - proxy-tier
 
   proxy:
     build: ./proxy
