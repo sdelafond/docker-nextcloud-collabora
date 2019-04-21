@@ -45,7 +45,7 @@ services:
       - proxy-tier
 
   letsencrypt-companion:
-    image: jrcs/letsencrypt-nginx-proxy-companion
+    image: jrcs/letsencrypt-nginx-proxy-companion:v1.10
     restart: always
     volumes:
       - ./docker-volumes/proxy/certs:/etc/nginx/certs
