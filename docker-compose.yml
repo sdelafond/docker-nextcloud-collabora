@@ -30,6 +30,7 @@ services:
 
   code:
     image: collabora/code:4.0.3.1
+    restart: always
     expose:
       - 9980
     cap_add:
