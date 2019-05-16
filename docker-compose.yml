@@ -52,7 +52,7 @@ services:
       - proxy-tier
 
   proxy:
-    build: ./proxy
+    image: jwilder/nginx-proxy:alpine-20190516
     restart: always
     ports:
       - "80:80"
@@ -63,6 +63,8 @@ services:
       - ./docker-volumes/proxy/certs:/etc/nginx/certs:ro
       - ./docker-volumes/proxy/vhost.d:/etc/nginx/vhost.d
       - ./docker-volumes/proxy/html:/usr/share/nginx/html
+      - ./proxy/uploadsize.conf:/etc/nginx/conf.d/uploadsize.conf:ro
+      - ./proxy/buffersize.conf:/etc/nginx/conf.d/buffersize.conf:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - proxy-tier
