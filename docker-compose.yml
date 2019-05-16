@@ -39,6 +39,8 @@ services:
       - MKNOD
     environment:
       domain: nextcloud.some-domain.com
+      username: some-login
+      password: yet-another-long-password
       VIRTUAL_HOST: collabora.some-domain.com
       VIRTUAL_NETWORK: proxy-tier
       VIRTUAL_PORT: 9980
