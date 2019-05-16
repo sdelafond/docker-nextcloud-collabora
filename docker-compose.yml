@@ -46,6 +46,7 @@ services:
       # shouldn't be needed since this container only exposes one port
       VIRTUAL_PORT: 9980
       VIRTUAL_PROTO: https
+      NETWORK_ACCESS: internal
       LETSENCRYPT_HOST: collabora.some-domain.com
       LETSENCRYPT_EMAIL: user@provider.com
     networks:
@@ -65,6 +66,7 @@ services:
       - ./docker-volumes/proxy/html:/usr/share/nginx/html
       - ./proxy/uploadsize.conf:/etc/nginx/conf.d/uploadsize.conf:ro
       - ./proxy/buffersize.conf:/etc/nginx/conf.d/buffersize.conf:ro
+      - ./proxy/network_internal.conf:/etc/nginx/network_internal.conf:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - proxy-tier
