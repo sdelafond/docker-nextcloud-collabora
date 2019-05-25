@@ -12,6 +12,13 @@ services:
       - /etc/timezone:/etc/timezone:ro
     env_file:
       - db.env
+    logging:
+      driver: fluentd
+      options:
+        tag: nextcloud.db
+        fluentd-async-connect: 'true'
+        fluentd-retry-wait: '1s'
+        fluentd-max-retries: '30'
 
   app:
     image: nextcloud:15.0-apache
@@ -33,6 +40,13 @@ services:
     networks:
       - proxy-tier
       - default # to connect to db
+    logging:
+      driver: fluentd
+      options:
+        tag: nextcloud.app
+        fluentd-async-connect: 'true'
+        fluentd-retry-wait: '1s'
+        fluentd-max-retries: '30'
 
   code:
     image: collabora/code:4.0.3.1
@@ -58,6 +72,13 @@ services:
       LETSENCRYPT_EMAIL: user@provider.com
     networks:
       - proxy-tier
+    logging:
+      driver: fluentd
+      options:
+        tag: nextcloud.code
+        fluentd-async-connect: 'true'
+        fluentd-retry-wait: '1s'
+        fluentd-max-retries: '30'
 
   proxy:
     image: jwilder/nginx-proxy:alpine-20190516
@@ -79,6 +100,13 @@ services:
       - /etc/timezone:/etc/timezone:ro
     networks:
       - proxy-tier
+    logging:
+      driver: fluentd
+      options:
+        tag: nextcloud.proxy
+        fluentd-async-connect: 'true'
+        fluentd-retry-wait: '1s'
+        fluentd-max-retries: '30'
 
   letsencrypt-companion:
     image: jrcs/letsencrypt-nginx-proxy-companion:v1.10
@@ -94,6 +122,13 @@ services:
       - proxy
     networks:
       - proxy-tier
+    logging:
+      driver: fluentd
+      options:
+        tag: nextcloud.letsencrypt-companion
+        fluentd-async-connect: 'true'
+        fluentd-retry-wait: '1s'
+        fluentd-max-retries: '30'
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.1.0
