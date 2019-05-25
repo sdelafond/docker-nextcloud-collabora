@@ -8,6 +8,8 @@ services:
       # FIXME: max connections raised from 100 to 1000 in
       # docker-volumes/db/postgresql.conf
       - ./docker-volumes/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     env_file:
       - db.env
 
@@ -16,6 +18,8 @@ services:
     restart: always
     volumes:
       - ./docker-volumes/html:/var/www/html
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     environment:
       POSTGRES_HOST: db
       VIRTUAL_HOST: nextcloud.some-domain.com
@@ -37,6 +41,9 @@ services:
       - 9980
     cap_add:
       - MKNOD
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     environment:
       domain: nextcloud.some-domain.com
       username: some-login
@@ -68,6 +75,8 @@ services:
       - ./proxy/buffersize.conf:/etc/nginx/conf.d/buffersize.conf:ro
       - ./proxy/network_internal.conf:/etc/nginx/network_internal.conf:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     networks:
       - proxy-tier
 
@@ -79,6 +88,8 @@ services:
       - ./docker-volumes/proxy/vhost.d:/etc/nginx/vhost.d
       - ./docker-volumes/proxy/html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     depends_on:
       - proxy
     networks:
