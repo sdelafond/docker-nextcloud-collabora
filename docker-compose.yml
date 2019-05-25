@@ -130,53 +130,6 @@ services:
         fluentd-retry-wait: '1s'
         fluentd-max-retries: '30'
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.1.0
-    volumes:
-      - ./docker-volumes/elasticsearch:/usr/share/elasticsearch/data
-    expose:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-      discovery.type: single-node
-    networks:
-      - efk
-    logging:
-      driver: fluentd
-      options:
-        tag: efk.elasticsearch
-    depends_on:
-      - fluentd        
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana-oss:7.1.0
-    environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-    expose:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-    networks:
-      - efk
-    logging:
-      driver: fluentd
-      options:
-        tag: efk.kibana  
-
-  fluentd:
-    build:
-      context: ./fluentd
-    volumes:
-      - ./fluentd/conf:/fluentd/etc
-    networks:
-      - efk
-    expose:
-      - "24224:24224"
-      - "24224:24224/udp"
-
 networks:
   proxy-tier:
   default:
-  efk:
-    driver: bridge
