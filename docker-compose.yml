@@ -21,7 +21,7 @@ services:
         fluentd-max-retries: '30'
 
   app:
-    image: nextcloud:15.0-apache
+    image: nextcloud:15.0.8-apache
     restart: always
     volumes:
       - ./docker-volumes/html:/var/www/html
