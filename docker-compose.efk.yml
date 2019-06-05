@@ -1,5 +1,20 @@
 version: '3'
 
+# before the ES index for fluentd gets created, you'll need to run the
+# following query (either in the kibana console, or via curl) so that
+# location_array is properly handled as a geopoint; make sure you do
+# this after ES has been started, but before fluentd starts:
+#  
+# PUT _template/fluentd
+# {
+#   "index-patterns: "fluentd-*",
+#   "mappings": {
+#     "properties" : {
+#         "location_array": { "type": "geo_point"}
+#     }
+#   }
+# }
+
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.1.0
