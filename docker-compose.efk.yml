@@ -14,12 +14,6 @@ services:
       discovery.type: single-node
     networks:
       - efk
-    logging:
-      driver: fluentd
-      options:
-        tag: efk.elasticsearch
-    depends_on:
-      - fluentd        
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:7.1.0
@@ -31,10 +25,6 @@ services:
       - elasticsearch
     networks:
       - efk
-    logging:
-      driver: fluentd
-      options:
-        tag: efk.kibana  
 
   fluentd:
     build:
