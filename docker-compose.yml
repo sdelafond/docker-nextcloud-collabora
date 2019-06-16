@@ -67,7 +67,7 @@ services:
       # shouldn't be needed since this container only exposes one port
       VIRTUAL_PORT: 9980
       VIRTUAL_PROTO: https
-      NETWORK_ACCESS: internal
+      # NETWORK_ACCESS: internal
       LETSENCRYPT_HOST: collabora.some-domain.com
       LETSENCRYPT_EMAIL: user@provider.com
     networks:
