@@ -21,6 +21,8 @@ services:
     volumes:
       # local dir neeeds to be chown'ed 1000:1000
       - ./docker-volumes/elasticsearch:/usr/share/elasticsearch/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     expose:
       - 9200
       - 9300
@@ -34,6 +36,9 @@ services:
     image: docker.elastic.co/kibana/kibana-oss:7.1.0
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     ports:
       - "127.0.0.1:5601:5601"
     depends_on:
@@ -46,6 +51,8 @@ services:
       context: ./fluentd
     volumes:
       - ./fluentd/conf:/fluentd/etc
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     networks:
       - efk
     ports:
