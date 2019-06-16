@@ -1,6 +1,6 @@
 FROM fluent/fluentd:v1.5.0-debian-1.0
 ARG GEOLITE_FLAVOR=GeoLite2-City
-ARG GEOLITE_VERSION=20190604
+ARG GEOLITE_VERSION=20190611
 
 # Use root account to use apk
 USER root
