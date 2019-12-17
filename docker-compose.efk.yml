@@ -27,7 +27,7 @@ services:
       - 9200
       - 9300
     environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ES_JAVA_OPTS: "-Xmx2g -Xms2g"
       discovery.type: single-node
     networks:
       - efk
