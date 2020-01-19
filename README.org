@@ -1,0 +1,39 @@
+Run Nextcloud and Collabora in a docker-based setup, with EFK
+(ElasticSearch/Fluentd/Kibana) logging and reporting.
+
+* Usage
+
+** Running the services
+
+*** Set environment variables
+
+    Copy the default file:
+
+    #+begin_src shell
+    cp default-env .env
+    #+end_src
+
+    Edit .env and set the different variables.
+
+*** Create volumes directories
+
+    #+begin_src shell
+    mkdir -p docker-volumes/{db,elasticsearch,html,proxy}
+    chown -R 1000:1000 docker-volumes/elasticsearch
+    #+end_src
+
+*** Start the services
+
+    #+begin_src shell
+    docker-compose -f /srv/nextcloud/docker-compose.efk.yml -f /srv/nextcloud/docker-compose.yml up
+    #+end_src
+
+** Monitoring
+
+   Kibana is only accessible locally at =http://localhost:5601=; if you
+   run the stack on a remote instance, you'll probably want to redirect
+   that port:
+
+   #+begin_src shell
+   ssh -f -N -L 5601:localhost:5601 nextcloud.some-domain.com
+   #+end_src
