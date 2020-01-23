@@ -1,4 +1,5 @@
-Run Nextcloud and Collabora in a docker-based setup, with EFK
+Run Nextcloud and Collabora in a docker-based setup, including automatic
+LetsEncrypt certificate management, and EFK
 (ElasticSearch/Fluentd/Kibana) logging and reporting.
 
 * Usage
