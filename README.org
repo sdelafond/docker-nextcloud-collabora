@@ -37,3 +37,19 @@ Run Nextcloud and Collabora in a docker-based setup, with EFK
    #+begin_src shell
    ssh -f -N -L 5601:localhost:5601 nextcloud.some-domain.com
    #+end_src
+
+* Android integration
+
+** Documents
+
+   https://f-droid.org/en/packages/com.nextcloud.client/
+   https://f-droid.org/en/packages/it.niedermann.owncloud.notes/
+
+** Calendar & contacts
+
+   https://f-droid.org/en/packages/at.bitfire.davdroid/
+
+** Remote calendars   
+
+   https://icsx5.bitfire.at/
+    
