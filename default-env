@@ -14,6 +14,9 @@ CODE_VIRTUAL_HOST=collabora.some-domain.com
 CODE_USERNAME=some-login
 CODE_PASSWORD=yet-another-long-password
 
+# kibana
+KIBANA_VIRTUAL_HOST=kibana.some-domaine.com
+
 # letsencrypt
 LETSENCRYPT_EMAIL=user@provider.com
 

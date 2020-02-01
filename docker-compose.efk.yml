@@ -36,17 +36,26 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:7.1.0
     restart: unless-stopped
+    expose:
+      - 5601
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    ports:
-      - "127.0.0.1:5601:5601"
     depends_on:
       - elasticsearch
     networks:
+      - proxy-tier
       - efk
+    labels:
+      traefik.http.routers.kibana.rule: Host(`${KIBANA_VIRTUAL_HOST}`)
+      traefik.http.routers.kibana.tls: true
+      traefik.http.routers.kibana.tls.certresolver: le
+      traefik.http.services.kibana.loadbalancer.server.port: 5601
+      traefik.http.routers.kibana.middlewares: auth
+      traefik.http.middlewares.auth.basicauth.users: ${TRAEFIK_AUTH_USER}
+      traefik.docker.network: nextcloud_proxy-tier
 
   fluentd:
     build:
