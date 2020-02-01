@@ -27,6 +27,4 @@ RUN tar xavf ${GEOLITE_FLAVOR}.tar.gz ${GEOLITE_FLAVOR}_${GEOLITE_VERSION}/${GEO
 RUN mv ${GEOLITE_FLAVOR}_${GEOLITE_VERSION}/${GEOLITE_FLAVOR}.mmdb /
 RUN rm -fr ${GEOLITE_FLAVOR}.tar.gz ${GEOLITE_FLAVOR}_${GEOLITE_VERSION}
 
-COPY conf/fluent.conf /fluentd/etc/
-
 USER fluent

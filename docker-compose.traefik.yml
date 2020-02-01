@@ -10,6 +10,7 @@ services:
       - --log.level=INFO
       - --api.dashboard=true
       - --serverstransport.insecureskipverify=true
+      - --accesslog.format=true
       - --certificatesresolvers.le.acme.email=${LETSENCRYPT_EMAIL}
       - --certificatesresolvers.le.acme.storage=/acme.json
       - --certificatesresolvers.le.acme.tlschallenge=true
@@ -34,13 +35,13 @@ services:
       traefik.http.routers.api.middlewares: auth
       traefik.http.middlewares.auth.basicauth.users: ${TRAEFIK_AUTH_USER}
 
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     tag: nextcloud.traefik
-    #     fluentd-async-connect: 'true'
-    #     fluentd-retry-wait: '1s'
-    #     fluentd-max-retries: '30'
+    logging:
+      driver: fluentd
+      options:
+        tag: nextcloud.proxy
+        fluentd-async-connect: 'true'
+        fluentd-retry-wait: '1s'
+        fluentd-max-retries: '30'
 
 networks:
   proxy-tier:
