@@ -1,6 +1,8 @@
-Run Nextcloud and Collabora in a docker-based setup, including automatic
-LetsEncrypt certificate management, and EFK
-(ElasticSearch/Fluentd/Kibana) logging and reporting.
+Nextcloud docker-based deployment, with the following functionalities:
+
+  - Collabora Online Development Edition
+  - EFK (ElasticSearch/Fluentd/Kibana) logging and reporting
+  - automatic LetsEncrypt SSL certificate management via Traefik
 
 * Usage
 
@@ -16,28 +18,28 @@ LetsEncrypt certificate management, and EFK
 
     Edit .env and set the different variables.
 
-*** Create volumes directories
+*** Create volumes directories and files
 
     #+begin_src shell
     mkdir -p docker-volumes/{db,elasticsearch,html,proxy}
-    chown -R 1000:1000 docker-volumes/elasticsearch
+    sudo chown -R 1000:1000 docker-volumes/elasticsearch
+    touch docker-volumes/acme.json
+    chmod 600 docker-volumes/acme.json
     #+end_src
 
 *** Start the services
 
     #+begin_src shell
-    docker-compose -f /srv/nextcloud/docker-compose.efk.yml -f /srv/nextcloud/docker-compose.yml up
+    docker-compose -f docker-compose.efk.yml -f docker-compose.traefik.yml -f docker-compose.yml up
     #+end_src
+
+** Use Nextcloud
+
+   The main interface is accessible at https://${NEXTCLOUD_VIRTUAL_HOST}
 
 ** Monitoring
 
-   Kibana is only accessible locally at =http://localhost:5601=; if you
-   run the stack on a remote instance, you'll probably want to redirect
-   that port:
-
-   #+begin_src shell
-   ssh -f -N -L 5601:localhost:5601 nextcloud.some-domain.com
-   #+end_src
+   Kibana is accessible at https://${KIBANA_VIRTUAL_HOST}
 
 * Android integration
 
@@ -52,5 +54,4 @@ LetsEncrypt certificate management, and EFK
 
 ** Remote calendars   
 
-   https://icsx5.bitfire.at/
-    
+   https://f-droid.org/en/packages/at.bitfire.icsdroid/
