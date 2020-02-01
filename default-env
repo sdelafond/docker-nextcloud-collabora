@@ -16,3 +16,7 @@ CODE_PASSWORD=yet-another-long-password
 
 # letsencrypt
 LETSENCRYPT_EMAIL=user@provider.com
+
+# traefik
+TRAEFIK_AUTH_USER=traefik-login:traefik-hashed-password
+TRAEFIK_VIRTUAL_HOST=traefik.some-domain.com

@@ -29,13 +29,15 @@ services:
       POSTGRES_HOST: db
       VIRTUAL_HOST: ${APP_VIRTUAL_HOST}
       NEXTCLOUD_TRUSTED_DOMAINS: ${APP_VIRTUAL_HOST}
-      LETSENCRYPT_HOST: ${APP_VIRTUAL_HOST}
-      LETSENCRYPT_EMAIL:
     depends_on:
       - db
     networks:
       - proxy-tier
       - default # to connect to db
+    labels:
+      traefik.http.routers.app.rule: Host(`${APP_VIRTUAL_HOST}`)
+      traefik.http.routers.app.tls: true
+      traefik.http.routers.app.tls.certresolver: le
     logging:
       driver: fluentd
       options:
@@ -47,8 +49,6 @@ services:
   code:
     image: collabora/code:4.2.0.3
     restart: always
-    expose:
-      - 9980
     cap_add:
       - MKNOD
     volumes:
@@ -58,16 +58,13 @@ services:
       domain: ${APP_VIRTUAL_HOST}
       username: ${CODE_USERNAME}
       password: ${CODE_PASSWORD}
-      VIRTUAL_HOST: ${CODE_VIRTUAL_HOST}
-      VIRTUAL_NETWORK: proxy-tier
-      # shouldn't be needed since this container only exposes one port
-      VIRTUAL_PORT: 9980
-      VIRTUAL_PROTO: https
-      # NETWORK_ACCESS: internal
-      LETSENCRYPT_HOST: ${CODE_VIRTUAL_HOST}
-      LETSENCRYPT_EMAIL:
     networks:
       - proxy-tier
+    labels:
+      traefik.http.routers.code.rule: Host(`${CODE_VIRTUAL_HOST}`)
+      traefik.http.routers.code.tls: true
+      traefik.http.routers.code.tls.certresolver: le
+      traefik.http.services.code.loadbalancer.server.port: 9980
     logging:
       driver: fluentd
       options:
@@ -76,56 +73,5 @@ services:
         fluentd-retry-wait: '1s'
         fluentd-max-retries: '30'
 
-  proxy:
-    image: jwilder/nginx-proxy:alpine-20190516
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
-    volumes:
-      - ./docker-volumes/proxy/certs:/etc/nginx/certs:ro
-      - ./docker-volumes/proxy/vhost.d:/etc/nginx/vhost.d
-      - ./docker-volumes/proxy/html:/usr/share/nginx/html
-      - ./proxy/uploadsize.conf:/etc/nginx/conf.d/uploadsize.conf:ro
-      - ./proxy/buffersize.conf:/etc/nginx/conf.d/buffersize.conf:ro
-      - ./proxy/network_internal.conf:/etc/nginx/network_internal.conf:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-    networks:
-      - proxy-tier
-    logging:
-      driver: fluentd
-      options:
-        tag: nextcloud.proxy
-        fluentd-async-connect: 'true'
-        fluentd-retry-wait: '1s'
-        fluentd-max-retries: '30'
-
-  letsencrypt-companion:
-    image: jrcs/letsencrypt-nginx-proxy-companion:v1.10
-    restart: always
-    volumes:
-      - ./docker-volumes/proxy/certs:/etc/nginx/certs
-      - ./docker-volumes/proxy/vhost.d:/etc/nginx/vhost.d
-      - ./docker-volumes/proxy/html:/usr/share/nginx/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-    depends_on:
-      - proxy
-    networks:
-      - proxy-tier
-    logging:
-      driver: fluentd
-      options:
-        tag: nextcloud.letsencrypt-companion
-        fluentd-async-connect: 'true'
-        fluentd-retry-wait: '1s'
-        fluentd-max-retries: '30'
-
 networks:
-  proxy-tier:
   default:
