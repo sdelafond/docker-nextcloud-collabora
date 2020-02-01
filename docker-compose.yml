@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     image: postgres:11.2
-    restart: always
+    restart: unless-stopped
     volumes:
       # FIXME: max connections raised from 100 to 1000 in
       # docker-volumes/db/postgresql.conf
@@ -20,7 +20,7 @@ services:
 
   app:
     image: nextcloud:18.0.0-apache
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./docker-volumes/html:/var/www/html
       - /etc/localtime:/etc/localtime:ro
@@ -48,7 +48,7 @@ services:
 
   code:
     image: collabora/code:4.2.0.3
-    restart: always
+    restart: unless-stopped
     cap_add:
       - MKNOD
     volumes:

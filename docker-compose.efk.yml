@@ -18,6 +18,7 @@ version: '3'
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.1.0
+    restart: unless-stopped
     volumes:
       # local dir neeeds to be chown'ed 1000:1000
       - ./docker-volumes/elasticsearch:/usr/share/elasticsearch/data
@@ -34,6 +35,7 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:7.1.0
+    restart: unless-stopped
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
     volumes:
@@ -49,6 +51,7 @@ services:
   fluentd:
     build:
       context: ./fluentd
+    restart: unless-stopped
     volumes:
       - ./fluentd/conf:/fluentd/etc
       - /etc/localtime:/etc/localtime:ro
