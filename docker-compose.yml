@@ -21,6 +21,8 @@ services:
   app:
     image: nextcloud:18.0.0-apache
     restart: unless-stopped
+    expose:
+      - 80
     volumes:
       - ./docker-volumes/html:/var/www/html
       - /etc/localtime:/etc/localtime:ro
@@ -38,6 +40,8 @@ services:
       traefik.http.routers.app.rule: Host(`${APP_VIRTUAL_HOST}`)
       traefik.http.routers.app.tls: true
       traefik.http.routers.app.tls.certresolver: le
+      traefik.http.services.app.loadbalancer.server.port: 80
+      traefik.docker.network: nextcloud_proxy-tier
     logging:
       driver: fluentd
       options:
@@ -49,6 +53,8 @@ services:
   code:
     image: collabora/code:4.2.0.3
     restart: unless-stopped
+    expose:
+      - 9980
     cap_add:
       - MKNOD
     volumes:
@@ -65,6 +71,7 @@ services:
       traefik.http.routers.code.tls: true
       traefik.http.routers.code.tls.certresolver: le
       traefik.http.services.code.loadbalancer.server.port: 9980
+      traefik.http.services.code.loadbalancer.server.scheme: https
     logging:
       driver: fluentd
       options:
