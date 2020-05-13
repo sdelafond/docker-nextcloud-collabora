@@ -19,7 +19,7 @@ services:
         fluentd-max-retries: '30'
 
   app:
-    image: nextcloud:18.0.3-apache
+    image: nextcloud:18.0.4-apache
     restart: unless-stopped
     expose:
       - 80
