@@ -42,6 +42,9 @@ services:
       traefik.http.routers.app.tls.certresolver: le
       traefik.http.services.app.loadbalancer.server.port: 80
       traefik.docker.network: nextcloud_proxy-tier
+      traefik.http.routers.app.middlewares: dav_discovery
+      traefik.http.middlewares.dav_discovery.redirectregex.regex: /.well-known/(card|cal)dav
+      traefik.http.middlewares.dav_discovery.redirectregex.replacement: /remote.php/dav/
     logging:
       driver: fluentd
       options:
