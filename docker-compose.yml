@@ -54,7 +54,7 @@ services:
         fluentd-max-retries: '30'
 
   code:
-    image: collabora/code:4.2.5.3
+    image: collabora/code:6.4.0.7
     restart: unless-stopped
     expose:
       - 9980
