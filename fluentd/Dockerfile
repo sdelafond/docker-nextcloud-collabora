@@ -1,6 +1,5 @@
 FROM fluent/fluentd:v1.5.0-debian-1.0
 ARG GEOLITE_FLAVOR=GeoLite2-City
-ARG GEOLITE_VERSION=20190611
 
 # Use root account to use apk
 USER root
@@ -22,9 +21,8 @@ RUN gem install fluent-plugin-rewrite
 RUN gem install fluent-plugin-rewrite-tag-filter
 RUN gem sources --clear-all
 
-RUN wget https://geolite.maxmind.com/download/geoip/database/${GEOLITE_FLAVOR}.tar.gz
-RUN tar xavf ${GEOLITE_FLAVOR}.tar.gz ${GEOLITE_FLAVOR}_${GEOLITE_VERSION}/${GEOLITE_FLAVOR}.mmdb
-RUN mv ${GEOLITE_FLAVOR}_${GEOLITE_VERSION}/${GEOLITE_FLAVOR}.mmdb /
-RUN rm -fr ${GEOLITE_FLAVOR}.tar.gz ${GEOLITE_FLAVOR}_${GEOLITE_VERSION}
+COPY ${GEOLITE_FLAVOR}.mmdb.gz /
+RUN gunzip ${GEOLITE_FLAVOR}.mmdb.gz
+RUN rm -fr ${GEOLITE_FLAVOR}.mmdb.gz
 
 USER fluent
