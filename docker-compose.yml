@@ -53,6 +53,19 @@ services:
         fluentd-retry-wait: '1s'
         fluentd-max-retries: '30'
 
+  app-cron:
+    image: nextcloud:20.0.1-apache
+    entrypoint: /cron.sh
+    restart: unless-stopped
+    volumes:
+      - ./docker-volumes/html:/var/www/html
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    depends_on:
+      - app
+    networks:
+      - default
+
   code:
     image: collabora/code:6.4.0.7
     restart: unless-stopped
