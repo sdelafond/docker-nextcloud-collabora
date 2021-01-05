@@ -67,7 +67,7 @@ services:
       - default
 
   code:
-    image: collabora/code:6.4.0.7
+    image: collabora/code:6.4.2.2
     restart: unless-stopped
     expose:
       - 9980
