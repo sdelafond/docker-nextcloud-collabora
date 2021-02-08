@@ -49,6 +49,8 @@ services:
       - proxy-tier
       - efk
     labels:
+      traefik.enable: true
+      traefik.docker.network: nextcloud_proxy-tier
       traefik.http.routers.kibana.rule: Host(`${KIBANA_VIRTUAL_HOST}`)
       traefik.http.routers.kibana.tls: true
       traefik.http.routers.kibana.tls.certresolver: le

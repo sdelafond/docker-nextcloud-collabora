@@ -37,11 +37,12 @@ services:
       - proxy-tier
       - default # to connect to db
     labels:
+      traefik.enable: true
+      traefik.docker.network: nextcloud_proxy-tier
       traefik.http.routers.app.rule: Host(`${APP_VIRTUAL_HOST}`)
-      traefik.http.routers.app.tls: true
+      traefik.http.routers.app.entrypoints: websecure
       traefik.http.routers.app.tls.certresolver: le
       traefik.http.services.app.loadbalancer.server.port: 80
-      traefik.docker.network: nextcloud_proxy-tier
       traefik.http.routers.app.middlewares: dav_discovery
       traefik.http.middlewares.dav_discovery.redirectregex.regex: /.well-known/(card|cal)dav
       traefik.http.middlewares.dav_discovery.redirectregex.replacement: /remote.php/dav/
@@ -83,8 +84,10 @@ services:
     networks:
       - proxy-tier
     labels:
+      traefik.enable: true
+      traefik.docker.network: nextcloud_proxy-tier
       traefik.http.routers.code.rule: Host(`${CODE_VIRTUAL_HOST}`)
-      traefik.http.routers.code.tls: true
+      traefik.http.routers.code.entrypoints: websecure
       traefik.http.routers.code.tls.certresolver: le
       traefik.http.services.code.loadbalancer.server.port: 9980
       traefik.http.services.code.loadbalancer.server.scheme: https
