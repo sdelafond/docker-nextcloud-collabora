@@ -10,13 +10,13 @@ services:
       - ./docker-volumes/db:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    logging:
-      driver: fluentd
-      options:
-        tag: nextcloud.db
-        fluentd-async-connect: 'true'
-        fluentd-retry-wait: '1s'
-        fluentd-max-retries: '30'
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: nextcloud.db
+    #     fluentd-async-connect: 'true'
+    #     fluentd-retry-wait: '1s'
+    #     fluentd-max-retries: '30'
 
   app:
     image: nextcloud:21.0.0-apache
@@ -46,13 +46,13 @@ services:
       traefik.http.routers.app.middlewares: dav_discovery
       traefik.http.middlewares.dav_discovery.redirectregex.regex: /.well-known/(card|cal)dav
       traefik.http.middlewares.dav_discovery.redirectregex.replacement: /remote.php/dav/
-    logging:
-      driver: fluentd
-      options:
-        tag: nextcloud.app
-        fluentd-async-connect: 'true'
-        fluentd-retry-wait: '1s'
-        fluentd-max-retries: '30'
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: nextcloud.app
+    #     fluentd-async-connect: 'true'
+    #     fluentd-retry-wait: '1s'
+    #     fluentd-max-retries: '30'
 
   app-cron:
     image: nextcloud:21.0.0-apache
@@ -91,13 +91,13 @@ services:
       traefik.http.routers.code.tls.certresolver: le
       traefik.http.services.code.loadbalancer.server.port: 9980
       traefik.http.services.code.loadbalancer.server.scheme: https
-    logging:
-      driver: fluentd
-      options:
-        tag: nextcloud.code
-        fluentd-async-connect: 'true'
-        fluentd-retry-wait: '1s'
-        fluentd-max-retries: '30'
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: nextcloud.code
+    #     fluentd-async-connect: 'true'
+    #     fluentd-retry-wait: '1s'
+    #     fluentd-max-retries: '30'
 
 networks:
   default:
