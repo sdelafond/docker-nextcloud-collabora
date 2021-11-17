@@ -19,7 +19,7 @@ services:
     #     fluentd-max-retries: '30'
 
   app:
-    image: nextcloud:22.1.1-apache
+    image: nextcloud:22.2.3-apache
     restart: unless-stopped
     expose:
       - 80
@@ -55,7 +55,7 @@ services:
     #     fluentd-max-retries: '30'
 
   app-cron:
-    image: nextcloud:21.0.0-apache
+    image: nextcloud:22.2.3-apache
     entrypoint: /cron.sh
     restart: unless-stopped
     volumes:
