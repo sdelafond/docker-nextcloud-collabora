@@ -1,7 +1,6 @@
 Nextcloud docker-based deployment, with the following functionalities:
 
   - Collabora Online Development Edition
-  - EFK (ElasticSearch/Fluentd/Kibana) logging and reporting
   - automatic LetsEncrypt SSL certificate management via Traefik
 
 * Usage
@@ -21,8 +20,7 @@ Nextcloud docker-based deployment, with the following functionalities:
 *** Create volumes directories and files
 
     #+begin_src shell
-    mkdir -p docker-volumes/{db,elasticsearch,html,proxy}
-    sudo chown -R 1000:1000 docker-volumes/elasticsearch
+    mkdir -p docker-volumes/{db,html,proxy}
     touch docker-volumes/acme.json
     chmod 600 docker-volumes/acme.json
     #+end_src
@@ -30,16 +28,12 @@ Nextcloud docker-based deployment, with the following functionalities:
 *** Start the services
 
     #+begin_src shell
-    docker-compose -f docker-compose.efk.yml -f docker-compose.traefik.yml -f docker-compose.yml up
+    docker-compose -f docker-compose.yml up
     #+end_src
 
 ** Use Nextcloud
 
    The main interface is accessible at https://${NEXTCLOUD_VIRTUAL_HOST}
-
-** Monitoring
-
-   Kibana is accessible at https://${KIBANA_VIRTUAL_HOST}
 
 * Android integration
 

@@ -1,22 +1,51 @@
 version: '3'
 
 services:
+  traefik:
+    image: traefik:2.4.2
+    restart: unless-stopped
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedByDefault=false
+      - --log.level=INFO
+      - --api.dashboard=true
+      - --serverstransport.insecureskipverify=true
+      - --accesslog.format=common
+      - --certificatesresolvers.le.acme.email=${LETSENCRYPT_EMAIL}
+      - --certificatesresolvers.le.acme.storage=/acme.json
+      - --certificatesresolvers.le.acme.httpchallenge=true
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+      - --entrypoints.websecure.address=:443
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker-volumes/acme.json:/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy-tier
+    labels:
+      traefik.enable: true
+      traefik.docker.network: nextcloud_proxy-tier
+      traefik.http.routers.api.rule: Host(`${TRAEFIK_VIRTUAL_HOST}`)
+      traefik.http.routers.api.service: api@internal
+      traefik.http.routers.api.entrypoints: websecure
+      traefik.http.routers.api.tls.certresolver: le
+      traefik.http.routers.api.middlewares: auth
+      traefik.http.middlewares.auth.basicauth.users: ${TRAEFIK_AUTH_USER}
+
   db:
     image: postgres:11.2
+    command: postgres -c 'max_connections=1000'
     restart: unless-stopped
     volumes:
-      # FIXME: max connections raised from 100 to 1000 in
-      # docker-volumes/db/postgresql.conf
       - ./docker-volumes/db:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     tag: nextcloud.db
-    #     fluentd-async-connect: 'true'
-    #     fluentd-retry-wait: '1s'
-    #     fluentd-max-retries: '30'
 
   app:
     image: nextcloud:23.0.2-apache
@@ -51,13 +80,6 @@ services:
       traefik.http.routers.app.middlewares: dav_discovery
       traefik.http.middlewares.dav_discovery.redirectregex.regex: /.well-known/(card|cal)dav
       traefik.http.middlewares.dav_discovery.redirectregex.replacement: /remote.php/dav/
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     tag: nextcloud.app
-    #     fluentd-async-connect: 'true'
-    #     fluentd-retry-wait: '1s'
-    #     fluentd-max-retries: '30'
 
   app-cron:
     image: nextcloud:23.0.2-apache
@@ -96,13 +118,7 @@ services:
       traefik.http.routers.code.tls.certresolver: le
       traefik.http.services.code.loadbalancer.server.port: 9980
       traefik.http.services.code.loadbalancer.server.scheme: https
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     tag: nextcloud.code
-    #     fluentd-async-connect: 'true'
-    #     fluentd-retry-wait: '1s'
-    #     fluentd-max-retries: '30'
 
 networks:
   default:
+  proxy-tier:
