@@ -105,7 +105,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:
-      domain: ${APP_VIRTUAL_HOST}
+      aliasgroup1: https://${APP_VIRTUAL_HOST}:443
       username: ${CODE_USERNAME}
       password: ${CODE_PASSWORD}
     networks:
