@@ -48,7 +48,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
 
   app:
-    image: nextcloud:24.0.0-apache
+    image: nextcloud:24.0.2-apache
     restart: unless-stopped
     expose:
       - 80
