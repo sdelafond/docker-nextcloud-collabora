@@ -95,7 +95,7 @@ services:
       - default
 
   code:
-    image: collabora/code:22.05.10.1.1
+    image: collabora/code:22.05.12.4.1
     restart: unless-stopped
     expose:
       - 9980
