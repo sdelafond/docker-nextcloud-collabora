@@ -48,7 +48,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
 
   app:
-    image: nextcloud:26.0.1-apache
+    image: nextcloud:26.0.4-apache
     restart: unless-stopped
     expose:
       - 80
@@ -82,7 +82,7 @@ services:
       traefik.http.middlewares.dav_discovery.redirectregex.replacement: /remote.php/dav/
 
   app-cron:
-    image: nextcloud:26.0.1-apache
+    image: nextcloud:26.0.4-apache
     entrypoint: /cron.sh
     restart: unless-stopped
     volumes:
